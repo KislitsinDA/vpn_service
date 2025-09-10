@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Тарифы - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="py-5">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Выберите свой тариф</h1>
+            <p class="lead text-muted">Все планы включают высокую скорость и надежную защиту</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            {% for code, p in plans.items() %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card pricing-card h-100 shadow-sm {% if code == '3m' %}border-primary{% endif %}">
+                    {% if code == '3m' %}
+                    <div class="popular-badge">
+                        <span class="badge bg-primary">Популярный</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-header text-center py-4 {% if code == '3m' %}bg-primary text-white{% else %}bg-white{% endif %}">
+                        <h4 class="card-title mb-0">
+                            {% if code == 'free' %}
+                                Бесплатно
+                            {% elif code == '1m' %}
+                                1 месяц
+                            {% else %}
+                                3 месяца
+                            {% endif %}
+                        </h4>
+                        <div class="price">
+                            <span class="price-amount">${{ p.amount }}</span>
+                            {% if code != 'free' %}
+                                <span class="price-period">
+                                    {% if code == '1m' %}/месяц{% else %}/3 месяца{% endif %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if code == '3m' %}
+                        <small class="text-white-50">Экономия 5%</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <ul class="list-unstyled feature-list">
+                            {% if code == 'free' %}
+                                <li><i class="fas fa-check text-success me-2"></i>Доступ ко всем сервисам</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Присутствует реклама</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Ограниченная скорость</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Нет поддержки</li>
+                            {% elif code == '1m' %}
+                                <li><i class="fas fa-check text-success me-2"></i>Безлимитный трафик</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Максимальная скорость</li>
+                                <li><i class="fas fa-check text-success me-2"></i>До 5 устройств</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Техническая поддержка</li>
+                            {% else %}
+                                <li><i class="fas fa-check text-success me-2"></i>Все преимущества 1 месяца</li>
+                                <li><i class="fas fa-star text-warning me-2"></i>Скидка 5%</li>
+                                <li><i class="fas fa-crown text-warning me-2"></i>Приоритетная поддержка</li>
+                                <li><i class="fas fa-gift text-success me-2"></i>Дополнительные серверы</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('billing.checkout', plan=code) }}" 
+                           class="btn {% if code == '3m' %}btn-primary{% else %}btn-outline-primary{% endif %} w-100">
+                            {% if code == 'free' %}
+                                Попробовать бесплатно
+                            {% else %}
+                                Выбрать план
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- FAQ Section -->
+        <div class="mt-5">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold">Часто задаваемые вопросы</h3>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="pricingFAQ">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq1">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">
+                                    Можно ли сменить тариф?
+                                </button>
+                            </h2>
+                            <div id="faqCollapse1" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                <div class="accordion-body">
+                                    Да, вы можете перейти на любой тариф в любое время из личного кабинета. При переходе на более дорогой тариф будет произведен перерасчет.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">
+                                    Есть ли возврат средств?
+                                </button>
+                            </h2>
+                            <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                <div class="accordion-body">
+                                    Мы предоставляем 7-дневную гарантию возврата средств для всех платных тарифов. Обратитесь в службу поддержки для оформления возврата.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faq3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3">
+                                    Какие способы оплаты доступны?
+                                </button>
+                            </h2>
+                            <div id="faqCollapse3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                <div class="accordion-body">
+                                    Мы принимаем банковские карты Visa/MasterCard, PayPal, а также платежи через CloudKassir для пользователей из России и СНГ.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

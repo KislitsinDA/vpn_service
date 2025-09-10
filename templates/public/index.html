@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}GSHVPN - Быстрый и безопасный VPN{% endblock %}
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Быстрый и надежный VPN-сервис
+                    </h1>
+                    <p class="lead mb-4">
+                        Начните наслаждаться любимыми сайтами и приложениями на
+                        высокой скорости и с максимальной защитой прямо сейчас!
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#pricing" class="btn btn-light btn-lg me-3">
+                            Подключиться
+                        </a>
+                        <a href="#opportunities" class="btn btn-outline-light btn-lg">
+                            Узнать больше
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-image">
+                    <div class="shield-icon">
+                        <i class="fas fa-shield-alt fa-10x text-white opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Доступные тарифы GSHVPN</h2>
+            <p class="section-subtitle text-muted">
+                Выбирайте наиболее подходящий план, исходя из ваших потребностей.
+            </p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <!-- Free Plan -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card pricing-card h-100 shadow-sm">
+                    <div class="card-header text-center py-4 bg-white">
+                        <h4 class="card-title mb-0">Бесплатно</h4>
+                        <div class="price">
+                            <span class="price-amount">$0</span>
+                            <span class="price-period">/месяц</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Доступ ко всем сервисам</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Присутствует реклама</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Низкая пропускная способность</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Нет технической поддержки</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('billing.checkout', plan='free') }}" class="btn btn-outline-primary w-100">
+                            Выбрать план
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 1 Month Plan -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card pricing-card h-100 shadow-sm">
+                    <div class="card-header text-center py-4 bg-white">
+                        <h4 class="card-title mb-0">1 месяц</h4>
+                        <div class="price">
+                            <span class="price-amount">$15</span>
+                            <span class="price-period">/месяц</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Доступ ко всем сервисам</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Нет рекламы</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Молниеносная скорость</li>
+                            <li><i class="fas fa-info text-info me-2"></i>Тариф без скидки</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('billing.checkout', plan='1m') }}" class="btn btn-primary w-100">
+                            Выбрать план
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3 Months Plan (Popular) -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card pricing-card h-100 shadow border-primary position-relative">
+                    <div class="popular-badge">
+                        <span class="badge bg-primary">Популярный</span>
+                    </div>
+                    <div class="card-header text-center py-4 bg-primary text-white">
+                        <h4 class="card-title mb-0">3 месяца</h4>
+                        <div class="price">
+                            <span class="price-amount">$29</span>
+                            <span class="price-period">/3 месяца</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled feature-list">
+                            <li><i class="fas fa-check text-success me-2"></i>Доступ ко всем сервисам</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Нет рекламы</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Большое количество устройств</li>
+                            <li><i class="fas fa-star text-warning me-2"></i>Скидка 5%</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('billing.checkout', plan='3m') }}" class="btn btn-primary w-100">
+                            Выбрать план
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="opportunities" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Безопасность и скорость с GSHVPN</h2>
+            <p class="section-subtitle text-muted">
+                GSHVPN использует современные протоколы и оптимизированную инфраструктуру, 
+                чтобы ваше соединение было стабильным, быстрым и защищённым.
+            </p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-bolt fa-3x text-primary"></i>
+                    </div>
+                    <h4 class="feature-title">Мгновенное подключение</h4>
+                    <p class="feature-description">
+                        Подключайтесь к VPN за секунды и наслаждайтесь высокой скоростью без задержек.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-globe fa-3x text-primary"></i>
+                    </div>
+                    <h4 class="feature-title">Работает везде</h4>
+                    <p class="feature-description">
+                        Используйте GSHVPN на любом устройстве — от смартфонов до компьютеров — без сбоев и ограничений.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                    </div>
+                    <h4 class="feature-title">Максимальная защита</h4>
+                    <p class="feature-description">
+                        Шифруем ваш трафик и скрываем IP‑адрес, чтобы защитить ваши данные от слежки и сторонних угроз.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">
+                                Как оплатить GSHVPN?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Оплатить можно банковской картой и другими удобными способами — без комиссии.</p>
+                                <ol>
+                                    <li>Зайдите в личный кабинет и выберите тариф.</li>
+                                    <li>Нажмите «Оплатить» и завершите платёж.</li>
+                                    <li>После успешной оплаты получите ключ доступа.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">
+                                Как установить VPN на устройство?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>Скачайте приложение Outline и импортируйте ваш ключ доступа:</p>
+                                <ol>
+                                    <li>Установите <a href="https://getoutline.org/" target="_blank">Outline</a> на ваше устройство</li>
+                                    <li>Скопируйте ключ доступа из личного кабинета</li>
+                                    <li>Добавьте ключ в приложение Outline</li>
+                                    <li>Наслаждайтесь безопасным интернетом!</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
