@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block title %}Email Логи - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold">Email Логи</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('admin.index') }}">Админ панель</a></li>
+                        <li class="breadcrumb-item active">Email Логи</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Email Logs Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-envelope me-2 text-warning"></i>
+                    Email уведомления ({{ emails.total }})
+                </h5>
+                
+                <div class="d-flex">
+                    <span class="badge bg-secondary me-2">Страница {{ emails.page }} из {{ emails.pages }}</span>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                {% if emails.items %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Получатель</th>
+                                <th>Тема</th>
+                                <th>Шаблон</th>
+                                <th>Дата отправки</th>
+                                <th>Статус</th>
+                                <th>Ошибка</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for email in emails.items %}
+                            <tr>
+                                <td>{{ email.id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            {{ email.email }}
+                                            {% if email.user %}
+                                                <br><small class="text-muted">{{ email.user.email }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 200px;" title="{{ email.subject }}">
+                                        {{ email.subject }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge 
+                                        {% if email.template == 'welcome' %}bg-success
+                                        {% elif email.template == 'payment_success' %}bg-primary
+                                        {% elif email.template == 'expiring_soon' %}bg-warning text-dark
+                                        {% elif email.template == 'expired' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {% if email.template == 'welcome' %}
+                                            Добро пожаловать
+                                        {% elif email.template == 'payment_success' %}
+                                            Успешная оплата
+                                        {% elif email.template == 'expiring_soon' %}
+                                            Истекает подписка
+                                        {% elif email.template == 'expired' %}
+                                            Подписка истекла
+                                        {% else %}
+                                            {{ email.template }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ email.sent_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td>
+                                    {% if email.success %}
+                                        <span class="badge bg-success">Доставлено</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Ошибка</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if email.error_message %}
+                                        <div class="text-danger small text-truncate" style="max-width: 150px;" 
+                                             title="{{ email.error_message }}">
+                                            {{ email.error_message }}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if emails.pages > 1 %}
+                <div class="card-footer">
+                    <nav aria-label="Email pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if emails.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.emails', page=emails.prev_num) }}">Предыдущая</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for page_num in emails.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != emails.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin.emails', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">…</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if emails.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.emails', page=emails.next_num) }}">Следующая</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+                
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Email уведомления не найдены</p>
+                    <small class="text-muted">
+                        Email логи появятся здесь после настройки SendGrid и отправки первых уведомлений.
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Email Statistics -->
+        {% if emails.items %}
+        <div class="row mt-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Доставлено</h5>
+                        <h3 class="mb-0">{{ emails.items|selectattr('success')|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ошибки</h5>
+                        <h3 class="mb-0">{{ emails.items|rejectattr('success')|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">За сегодня</h5>
+                        <h3 class="mb-0">{{ emails.items|selectattr('sent_at')|selectattr('sent_at', 'sameas', today)|list|length }}</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Всего</h5>
+                        <h3 class="mb-0">{{ emails.total }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
