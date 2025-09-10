@@ -1,0 +1,51 @@
+<header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('public.index') }}">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="GSHVPN" height="40" class="me-2">
+            <span class="fw-bold text-primary fs-4">GSHVPN</span>
+        </a>
+        
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navigation -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {% if request.endpoint not in ["auth.login", "auth.register"] %}
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#pricing">Тарифы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#opportunities">Возможности</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('public.docs') }}">Поддержка</a>
+                </li>
+            </ul>
+            {% endif %}
+            
+            <!-- Auth buttons -->
+            <div class="d-flex">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-primary me-2">Личный кабинет</a>
+                    <form method="post" action="{{ url_for('auth.logout') }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-secondary">Выйти</button>
+                    </form>
+                {% else %}
+                    {% if request.endpoint == "auth.login" %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary me-2">Регистрация</a>
+                    {% elif request.endpoint == "auth.register" %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary me-2">Войти</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary me-2">Войти</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Регистрация</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
