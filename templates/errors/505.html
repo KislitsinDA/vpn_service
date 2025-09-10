@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Ошибка сервера - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            <div class="py-5">
+                <div class="error-icon mb-4">
+                    <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-primary">500</h1>
+                <h2 class="h3 mb-3">Внутренняя ошибка сервера</h2>
+                <p class="text-muted mb-4">
+                    Произошла неожиданная ошибка. Мы уже работаем над её устранением.
+                </p>
+                <div>
+                    <a href="{{ url_for('public.index') }}" class="btn btn-primary me-2">
+                        На главную
+                    </a>
+                    <a href="{{ url_for('public.docs') }}" class="btn btn-outline-primary">
+                        Связаться с поддержкой
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
