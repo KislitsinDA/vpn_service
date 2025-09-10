@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% block title %}Управление подпиской - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold">Управление подпиской</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboard.index') }}">Личный кабинет</a></li>
+                        <li class="breadcrumb-item active">Подписка</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Current Subscription -->
+        {% if subscription %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-crown me-2 text-warning"></i>
+                            Текущая подписка
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="text-primary mb-3">
+                                    {% if subscription.plan == 'free' %}
+                                        Бесплатный тариф
+                                    {% elif subscription.plan == '1m' %}
+                                        Месячная подписка
+                                    {% else %}
+                                        Квартальная подписка (3 месяца)
+                                    {% endif %}
+                                </h4>
+                                
+                                <div class="subscription-details">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-4">
+                                            <strong>Стоимость:</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            ${{ subscription.amount_usd }}
+                                            {% if subscription.plan != 'free' %}
+                                                / {% if subscription.plan == '1m' %}месяц{% else %}3 месяца{% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-sm-4">
+                                            <strong>Дата активации:</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {{ subscription.created_at.strftime('%d.%m.%Y в %H:%M') }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-sm-4">
+                                            <strong>Срок действия:</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {% if subscription.expires_at %}
+                                                {{ subscription.expires_at.strftime('%d.%m.%Y') }}
+                                                {% set days_left = subscription.days_remaining() %}
+                                                {% if days_left is not none %}
+                                                    <span class="badge {% if days_left > 7 %}bg-success{% elif days_left > 3 %}bg-warning text-dark{% else %}bg-danger{% endif %} ms-2">
+                                                        {% if days_left > 0 %}
+                                                            Осталось {{ days_left }} дн.
+                                                        {% else %}
+                                                            Истек
+                                                        {% endif %}
+                                                    </span>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-success">Бессрочно</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <strong>Статус:</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            {% if subscription.is_active and not subscription.is_expired() %}
+                                                <span class="badge bg-success">Активна</span>
+                                            {% elif subscription.is_expired() %}
+                                                <span class="badge bg-danger">Истекла</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Неактивна</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {% if subscription.days_remaining() and subscription.days_remaining() <= 7 %}
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Внимание!</strong> Ваша подписка скоро истекает. 
+                                    Продлите её, чтобы не потерять доступ к VPN.
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-4 text-center">
+                                <div class="subscription-actions">
+                                    {% if subscription.plan != 'free' and subscription.days_remaining() and subscription.days_remaining() <= 14 %}
+                                    <a href="{{ url_for('public.pricing') }}" class="btn btn-primary mb-2 w-100">
+                                        <i class="fas fa-repeat me-2"></i>
+                                        Продлить подписку
+                                    </a>
+                                    {% endif %}
+                                    
+                                    <a href="{{ url_for('public.pricing') }}" class="btn btn-outline-primary w-100">
+                                        <i class="fas fa-arrow-up me-2"></i>
+                                        Сменить тариф
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Available Plans -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tags me-2 text-primary"></i>
+                            Доступные тарифы
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for code, p in plans.items() %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="card plan-card h-100 {% if subscription and subscription.plan == code %}border-success{% else %}border-light{% endif %}">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">
+                                            {% if code == 'free' %}
+                                                Бесплатно
+                                            {% elif code == '1m' %}
+                                                1 месяц
+                                            {% else %}
+                                                3 месяца
+                                            {% endif %}
+                                            {% if subscription and subscription.plan == code %}
+                                                <span class="badge bg-success ms-2">Текущий</span>
+                                            {% endif %}
+                                        </h6>
+                                        <div class="price mb-3">
+                                            <span class="h4 text-primary">${{ p.amount }}</span>
+                                            {% if code != 'free' %}
+                                                <small class="text-muted">
+                                                    / {% if code == '1m' %}месяц{% else %}3 месяца{% endif %}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        {% if not subscription or subscription.plan != code %}
+                                        <a href="{{ url_for('billing.checkout', plan=code) }}" class="btn btn-primary btn-sm">
+                                            Выбрать
+                                        </a>
+                                        {% else %}
+                                        <button class="btn btn-success btn-sm" disabled>
+                                            <i class="fas fa-check me-1"></i>
+                                            Активен
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Subscription History -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2 text-primary"></i>
+                            История подписок
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if subscription_history %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Тариф</th>
+                                        <th>Сумма</th>
+                                        <th>Дата оплаты</th>
+                                        <th>Период действия</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sub in subscription_history %}
+                                    <tr>
+                                        <td>
+                                            {% if sub.plan == 'free' %}
+                                                Бесплатно
+                                            {% elif sub.plan == '1m' %}
+                                                1 месяц
+                                            {% else %}
+                                                3 месяца
+                                            {% endif %}
+                                        </td>
+                                        <td>${{ sub.amount_usd }}</td>
+                                        <td>{{ sub.created_at.strftime('%d.%m.%Y') }}</td>
+                                        <td>
+                                            {% if sub.expires_at %}
+                                                {{ sub.created_at.strftime('%d.%m.%Y') }} - {{ sub.expires_at.strftime('%d.%m.%Y') }}
+                                            {% else %}
+                                                Бессрочно
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if sub.is_active and not sub.is_expired() %}
+                                                <span class="badge bg-success">Активна</span>
+                                            {% elif sub.is_expired() %}
+                                                <span class="badge bg-danger">Истекла</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Неактивна</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-3">
+                            <p class="text-muted">История подписок пуста</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.plan-card {
+    transition: transform 0.2s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+}
+
+.subscription-details .row {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+.subscription-details .row:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}VPN Ключи - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold">VPN Ключи</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboard.index') }}">Личный кабинет</a></li>
+                        <li class="breadcrumb-item active">VPN Ключи</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <a href="{{ url_for('public.pricing') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>
+                    Получить новый ключ
+                </a>
+            </div>
+        </div>
+        
+        <!-- VPN Keys List -->
+        {% if vpn_keys %}
+        <div class="row">
+            {% for key in vpn_keys %}
+            <div class="col-12 mb-4">
+                <div class="card key-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-key me-2 text-primary"></i>
+                            VPN Ключ #{{ key.id }}
+                            {% if key.is_active %}
+                                <span class="badge bg-success ms-2">Активен</span>
+                            {% else %}
+                                <span class="badge bg-secondary ms-2">Неактивен</span>
+                            {% endif %}
+                        </h6>
+                        
+                        <div class="key-actions">
+                            <button class="btn btn-sm btn-outline-primary copy-key-btn" 
+                                    data-key="{{ key.token }}" title="Скопировать ключ">
+                                <i class="fas fa-copy me-1"></i>
+                                Скопировать
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <!-- Key Details -->
+                                <div class="key-details mb-3">
+                                    <h6 class="text-secondary mb-2">Информация о ключе</h6>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <small class="text-muted">Создан:</small>
+                                            <div>{{ key.created_at.strftime('%d.%m.%Y в %H:%M') }}</div>
+                                        </div>
+                                        
+                                        <div class="col-sm-4">
+                                            <small class="text-muted">Действует до:</small>
+                                            <div>
+                                                {% if key.expires_at %}
+                                                    {{ key.expires_at.strftime('%d.%m.%Y') }}
+                                                    {% if key.is_expired() %}
+                                                        <span class="badge bg-danger ms-1">Истёк</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span class="text-success">Бессрочно</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-4">
+                                            <small class="text-muted">Тариф:</small>
+                                            <div>
+                                                {% if key.subscription %}
+                                                    {% if key.subscription.plan == 'free' %}
+                                                        Бесплатно
+                                                    {% elif key.subscription.plan == '1m' %}
+                                                        1 месяц
+                                                    {% else %}
+                                                        3 месяца
+                                                    {% endif %}
+                                                {% else %}
+                                                    Не указан
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Key Token -->
+                                <div class="key-token-section">
+                                    <h6 class="text-secondary mb-2">Ключ доступа</h6>
+                                    <div class="key-token-container">
+                                        <pre class="key-token p-3 bg-light border rounded"><code>{{ key.token }}</code></pre>
+                                        <button class="btn btn-sm btn-outline-primary copy-btn copy-key-btn" 
+                                                data-key="{{ key.token }}">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4">
+                                <!-- Setup Instructions -->
+                                <div class="setup-guide p-3 bg-light rounded">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="fas fa-download me-1"></i>
+                                        Как использовать
+                                    </h6>
+                                    
+                                    <div class="step mb-2">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <strong>Скачайте Outline</strong>
+                                            <div class="mt-1">
+                                                <a href="https://getoutline.org/en/home" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-external-link-alt me-1"></i>
+                                                    Скачать
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="step mb-2">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <strong>Скопируйте ключ</strong>
+                                            <div class="mt-1">
+                                                <button class="btn btn-sm btn-primary copy-key-btn" 
+                                                        data-key="{{ key.token }}">
+                                                    <i class="fas fa-copy me-1"></i>
+                                                    Копировать
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <strong>Добавьте в Outline</strong>
+                                            <small class="text-muted d-block">
+                                                Вставьте ключ в приложение
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination would go here if needed -->
+        
+        {% else %}
+        <!-- Empty State -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-key fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted mb-3">У вас пока нет VPN ключей</h4>
+                        <p class="text-muted mb-4">
+                            Приобретите подписку, чтобы получить доступ к VPN и защитить ваше интернет-соединение.
+                        </p>
+                        <a href="{{ url_for('public.pricing') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>
+                            Получить первый ключ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Help Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-body">
+                        <h6 class="card-title text-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Нужна помощь?
+                        </h6>
+                        <p class="card-text mb-2">
+                            Если у вас возникли проблемы с настройкой VPN, обратитесь к нашему руководству или свяжитесь с поддержкой.
+                        </p>
+                        <a href="{{ url_for('public.docs') }}" class="btn btn-outline-info btn-sm me-2">
+                            <i class="fas fa-book me-1"></i>
+                            Инструкции по настройке
+                        </a>
+                        <a href="mailto:kislicin4work@gmail.com" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-envelope me-1"></i>
+                            Связаться с поддержкой
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.key-card {
+    border-left: 4px solid var(--bs-primary);
+}
+
+.key-token-container {
+    position: relative;
+}
+
+.key-token {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+    line-height: 1.4;
+    padding-right: 50px !important;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    border: 2px dashed #dee2e6 !important;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0.25rem 0.5rem;
+}
+
+.setup-guide .step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.step-number {
+    background: var(--bs-primary);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.key-details .col-sm-4 {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .key-token {
+        padding-right: 15px !important;
+    }
+    
+    .copy-btn {
+        position: static;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
