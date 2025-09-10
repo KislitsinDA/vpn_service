@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="fw-bold">Личный кабинет</h1>
+                <p class="text-muted mb-0">Добро пожаловать, {{ current_user.email }}</p>
+            </div>
+            <div>
+                <a href="{{ url_for('public.pricing') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>
+                    Купить подписку
+                </a>
+            </div>
+        </div>
+        
+        <!-- Current Subscription -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-crown me-2 text-warning"></i>
+                            Текущая подписка
+                        </h5>
+                        {% if subscription %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="subscription-info">
+                                        <h6 class="fw-semibold">
+                                            {% if subscription.plan == 'free' %}
+                                                Бесплатный тариф
+                                            {% elif subscription.plan == '1m' %}
+                                                1 месяц
+                                            {% else %}
+                                                3 месяца
+                                            {% endif %}
+                                        </h6>
+                                        <p class="text-muted small mb-2">
+                                            Оплачено: ${{ subscription.amount_usd }}
+                                        </p>
+                                        {% if subscription.expires_at %}
+                                        <p class="small">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            Действует до: {{ subscription.expires_at.strftime('%d.%m.%Y') }}
+                                            {% set days_left = subscription.days_remaining() %}
+                                            {% if days_left is not none %}
+                                                <span class="badge {% if days_left > 7 %}bg-success{% elif days_left > 3 %}bg-warning{% else %}bg-danger{% endif %} ms-2">
+                                                    {{ days_left }} дн.
+                                                </span>
+                                            {% endif %}
+                                        </p>
+                                        {% else %}
+                                        <p class="small text-success">
+                                            <i class="fas fa-infinity me-1"></i>
+                                            Бессрочно
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    {% if subscription.days_remaining() and subscription.days_remaining() <= 7 %}
+                                    <div class="alert alert-warning p-2 small">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Подписка скоро истекает!
+                                    </div>
+                                    {% endif %}
+                                    <a href="{{ url_for('dashboard.subscription') }}" class="btn btn-outline-primary btn-sm">
+                                        Управление подпиской
+                                    </a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-3">
+                                <p class="text-muted">У вас нет активной подписки</p>
+                                <a href="{{ url_for('public.pricing') }}" class="btn btn-primary">
+                                    Выбрать тариф
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VPN Keys -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-key me-2 text-primary"></i>
+                            Ваши VPN ключи
+                        </h5>
+                        <a href="{{ url_for('dashboard.keys') }}" class="btn btn-sm btn-outline-primary">
+                            Все ключи
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if vpn_keys %}
+                            {% for key in vpn_keys[:3] %}
+                            <div class="key-item p-3 border rounded mb-3">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="key-info">
+                                            <h6 class="mb-1">
+                                                Ключ #{{ key.id }}
+                                                {% if key.is_active %}
+                                                    <span class="badge bg-success ms-2">Активен</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary ms-2">Неактивен</span>
+                                                {% endif %}
+                                            </h6>
+                                            <div class="key-preview">
+                                                <code class="small">{{ key.token[:50] }}...</code>
+                                            </div>
+                                            <small class="text-muted">
+                                                Создан: {{ key.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <button class="btn btn-sm btn-outline-primary copy-key-btn me-2" 
+                                                data-key="{{ key.token }}" title="Скопировать ключ">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <a href="{{ url_for('dashboard.keys') }}" class="btn btn-sm btn-outline-secondary">
+                                            Подробнее
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">У вас пока нет VPN ключей</p>
+                                <a href="{{ url_for('public.pricing') }}" class="btn btn-primary">
+                                    Получить первый ключ
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Subscription History -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2 text-primary"></i>
+                            История подписок
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if subscription_history %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Тариф</th>
+                                            <th>Сумма</th>
+                                            <th>Дата оплаты</th>
+                                            <th>Срок действия</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for sub in subscription_history[:5] %}
+                                        <tr>
+                                            <td>
+                                                {% if sub.plan == 'free' %}
+                                                    Бесплатно
+                                                {% elif sub.plan == '1m' %}
+                                                    1 месяц
+                                                {% else %}
+                                                    3 месяца
+                                                {% endif %}
+                                            </td>
+                                            <td>${{ sub.amount_usd }}</td>
+                                            <td>{{ sub.created_at.strftime('%d.%m.%Y') }}</td>
+                                            <td>
+                                                {% if sub.expires_at %}
+                                                    {{ sub.expires_at.strftime('%d.%m.%Y') }}
+                                                {% else %}
+                                                    Бессрочно
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if sub.is_active and not sub.is_expired() %}
+                                                    <span class="badge bg-success">Активна</span>
+                                                {% elif sub.is_expired() %}
+                                                    <span class="badge bg-danger">Истекла</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Неактивна</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-3">
+                                <p class="text-muted">История подписок пуста</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.key-item {
+    background: #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+.key-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.key-preview {
+    background: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    margin: 0.5rem 0;
+}
+
+.subscription-info h6 {
+    color: var(--bs-primary);
+}
+</style>
+{% endblock %}
