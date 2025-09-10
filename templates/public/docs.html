@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Поддержка и документация - GSHVPN{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="py-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bold">Поддержка GSHVPN</h1>
+                    <p class="lead text-muted">Помощь в настройке и использовании VPN</p>
+                </div>
+                
+                <!-- Quick Help -->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">
+                            <i class="fas fa-headset me-2 text-primary"></i>
+                            Нужна помощь?
+                        </h5>
+                        <p class="card-text mb-3">
+                            Свяжитесь с нашей службой поддержки для получения помощи в настройке и оплате.
+                        </p>
+                        <a href="mailto:kislicin4work@gmail.com" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>
+                            kislicin4work@gmail.com
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Installation Guide -->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">
+                            <i class="fas fa-download me-2 text-primary"></i>
+                            Установка VPN
+                        </h5>
+                        
+                        <div class="accordion" id="installGuide">
+                            <!-- Android -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="android">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#androidCollapse">
+                                        <i class="fab fa-android me-2 text-success"></i>
+                                        Android
+                                    </button>
+                                </h2>
+                                <div id="androidCollapse" class="accordion-collapse collapse" data-bs-parent="#installGuide">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Скачайте Outline из <a href="https://play.google.com/store/apps/details?id=org.outline.android.client" target="_blank">Google Play</a></li>
+                                            <li>Откройте приложение и нажмите "+"</li>
+                                            <li>Вставьте ваш ключ доступа из личного кабинета</li>
+                                            <li>Нажмите "Подключить"</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- iOS -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="ios">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#iosCollapse">
+                                        <i class="fab fa-apple me-2"></i>
+                                        iOS
+                                    </button>
+                                </h2>
+                                <div id="iosCollapse" class="accordion-collapse collapse" data-bs-parent="#installGuide">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Скачайте Outline из <a href="https://apps.apple.com/app/outline-app/id1356177741" target="_blank">App Store</a></li>
+                                            <li>Откройте приложение и нажмите "+"</li>
+                                            <li>Вставьте ваш ключ доступа</li>
+                                            <li>Подтвердите установку VPN профиля</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Windows -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="windows">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#windowsCollapse">
+                                        <i class="fab fa-windows me-2 text-primary"></i>
+                                        Windows
+                                    </button>
+                                </h2>
+                                <div id="windowsCollapse" class="accordion-collapse collapse" data-bs-parent="#installGuide">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Скачайте <a href="https://s3.amazonaws.com/outline-releases/client/windows/stable/Outline-Client.exe" target="_blank">Outline для Windows</a></li>
+                                            <li>Установите и запустите приложение</li>
+                                            <li>Нажмите "+" для добавления сервера</li>
+                                            <li>Вставьте ваш ключ доступа</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- macOS -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="macos">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#macosCollapse">
+                                        <i class="fab fa-apple me-2"></i>
+                                        macOS
+                                    </button>
+                                </h2>
+                                <div id="macosCollapse" class="accordion-collapse collapse" data-bs-parent="#installGuide">
+                                    <div class="accordion-body">
+                                        <ol>
+                                            <li>Скачайте <a href="https://s3.amazonaws.com/outline-releases/client/apple/stable/Outline-Client.dmg" target="_blank">Outline для macOS</a></li>
+                                            <li>Установите приложение</li>
+                                            <li>Добавьте ключ доступа</li>
+                                            <li>Подключитесь к серверу</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Useful Links -->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">
+                            <i class="fas fa-link me-2 text-primary"></i>
+                            Полезные ссылки
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="https://getoutline.org/en/home" target="_blank" class="text-decoration-none">
+                                            <i class="fas fa-external-link-alt me-2"></i>
+                                            Официальный сайт Outline
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{{ url_for('public.pricing') }}" class="text-decoration-none">
+                                            <i class="fas fa-tags me-2"></i>
+                                            Тарифы
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{{ url_for('dashboard.index') }}" class="text-decoration-none">
+                                            <i class="fas fa-tachometer-alt me-2"></i>
+                                            Личный кабинет
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{{ url_for('auth.register') }}" class="text-decoration-none">
+                                            <i class="fas fa-user-plus me-2"></i>
+                                            Регистрация
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Legal Documents -->
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">
+                            <i class="fas fa-file-alt me-2 text-primary"></i>
+                            Правовые документы
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6>Пользовательское соглашение</h6>
+                                    <p class="small text-muted">
+                                        Используя наш сервис, вы соглашаетесь с условиями предоставления услуг VPN.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6>Политика конфиденциальности</h6>
+                                    <p class="small text-muted">
+                                        Мы не ведем логи вашей активности и защищаем вашу конфиденциальность.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
